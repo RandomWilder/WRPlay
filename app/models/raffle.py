@@ -1,11 +1,13 @@
-from app import db
-from datetime import datetime
+from app.models.base import Base, db
 
-class Raffle(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(64), nullable=False)
-    total_tickets = db.Column(db.Integer, nullable=False)
+class Raffle(Base):
+    __tablename__ = 'raffles'
+
+    name = db.Column(db.String(128), nullable=False)
+    description = db.Column(db.Text)
     ticket_price = db.Column(db.Float, nullable=False)
-    draw_date = db.Column(db.DateTime, nullable=False)
+    total_tickets = db.Column(db.Integer, nullable=False)
+    draw_date = db.Column(db.DateTime)
     is_active = db.Column(db.Boolean, default=True)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    tickets = db.relationship('Ticket', back_populates='raffle')

@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1 class="mb-4">My Tickets</h1>
+
+<div class="card mb-4">
+    <div class="card-body">
+        <h5 class="card-title">Current Balance</h5>
+        <p class="card-text">Your balance: ${{ '%.2f'|format(balance) }}</p>
+        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addFundsModal">Add Funds</button>
+    </div>
+</div>
+
+<h2 class="mb-3">Your Purchased Tickets</h2>
+{% if tickets %}
+<div class="table-responsive">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Raffle Name</th>
+                <th>Ticket Number</th>
+                <th>Purchase Date</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for ticket in tickets %}
+            <tr>
+                <td>{{ ticket.raffle.name }}</td>
+                <td>{{ ticket.ticket_number }}</td>
+                <td>{{ ticket.purchase_date.strftime('%Y-%m-%d %H:%M') }}</td>
+                <td>{% if ticket.is_winner %}Winner!{% else %}Pending{% endif %}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<p>You haven't purchased any tickets yet.</p>
+{% endif %}
+
+<!-- Add Funds Modal -->
+<div class="modal fade" id="addFundsModal" tabindex="-1" aria-labelledby="addFundsModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addFundsModalLabel">Add Funds</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="{{ url_for('raffle.add_funds') }}" method="POST">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="amount" class="form-label">Amount to Add:</label>
+                        <input type="number" class="form-control" id="amount" name="amount" min="1" step="0.01" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Add Funds</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

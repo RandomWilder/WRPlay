@@ -1,12 +1,17 @@
-from app import db
+from app.models.base import Base, db
 from datetime import datetime
 
-class Ticket(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    raffle_id = db.Column(db.Integer, db.ForeignKey('raffle.id'), nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+class Ticket(Base):
+    __tablename__ = 'tickets'
+
+    raffle_id = db.Column(db.Integer, db.ForeignKey('raffles.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=True)
+    ticket_number = db.Column(db.Integer, nullable=False)
     purchase_date = db.Column(db.DateTime, default=datetime.utcnow)
     is_winner = db.Column(db.Boolean, default=False)
 
-    raffle = db.relationship('Raffle', backref=db.backref('tickets', lazy=True))
-    user = db.relationship('User', backref=db.backref('tickets', lazy=True))
+    user = db.relationship('User', backref=db.backref('tickets', lazy='dynamic'))
+    raffle = db.relationship('Raffle', back_populates='tickets')
+
+    def __repr__(self):
+        return f'<Ticket {self.ticket_number} for Raffle {self.raffle_id}>'

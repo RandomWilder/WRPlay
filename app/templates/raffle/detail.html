@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1 class="mb-4">{{ raffle.name }}</h1>
+<div class="card mb-4">
+    <div class="card-body">
+        <h5 class="card-title">Description</h5>
+        <p class="card-text">{{ raffle.description }}</p>
+        <p class="card-text">Price per ticket: ${{ '%.2f'|format(raffle.ticket_price) }}</p>
+        <p class="card-text">Total tickets: {{ raffle.total_tickets }}</p>
+        <p class="card-text">Available tickets: {{ available_tickets }}</p>
+        <p class="card-text">Draw date: {{ raffle.draw_date.strftime('%Y-%m-%d %H:%M') }}</p>
+    </div>
+</div>
+
+{% if current_user.is_authenticated and raffle.is_active %}
+<form action="{{ url_for('raffle.buy_ticket', raffle_id=raffle.id) }}" method="POST" class="mb-4">
+    <div class="form-group mb-3">
+        <label for="quantity">Number of Tickets:</label>
+        <input type="number" class="form-control" id="quantity" name="quantity" min="1" max="{{ available_tickets }}" value="1" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Purchase Tickets</button>
+</form>
+{% elif not current_user.is_authenticated %}
+<p>Please <a href="{{ url_for('auth.login') }}">log in</a> to purchase tickets.</p>
+{% elif not raffle.is_active %}
+<p>This raffle is no longer active.</p>
+{% endif %}
+{% endblock %}
