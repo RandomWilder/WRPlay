@@ -11,16 +11,14 @@
         <a class="navbar-brand" href="{{ url_for('main.index') }}">Raffle System</a>
         <div class="navbar-nav">
             <a class="nav-item nav-link" href="{{ url_for('main.index') }}">Home</a>
-            <a class="nav-item nav-link" href="{{ url_for('raffle.list_raffles') }}">Raffles</a>
             {% if current_user.is_authenticated %}
-                {% if current_user.is_admin %}
-                    <a class="nav-item nav-link" href="{{ url_for('admin.admin_panel') }}">Admin</a>
-                {% endif %}
+                <a class="nav-item nav-link" href="{{ url_for('raffle.my_tickets') }}">My Tickets</a>
                 <a class="nav-item nav-link" href="{{ url_for('auth.logout') }}">Logout</a>
             {% else %}
                 <a class="nav-item nav-link" href="{{ url_for('auth.login') }}">Login</a>
                 <a class="nav-item nav-link" href="{{ url_for('auth.register') }}">Register</a>
             {% endif %}
+            <a class="nav-item nav-link" href="{{ url_for('admin_routes.admin_login') }}">Admin</a>
         </div>
     </nav>
 

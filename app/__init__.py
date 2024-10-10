@@ -9,6 +9,7 @@ from config import Config
 
 db = SQLAlchemy()
 login_manager = LoginManager()
+login_manager.login_view = 'auth.login'  # Add this line here
 admin_manager = Admin(template_mode='bootstrap3')
 
 def create_app(config_class=Config):
@@ -21,13 +22,13 @@ def create_app(config_class=Config):
 
     from app.models import User
     from app.routes import main, auth, raffle
-    from app.routes.admin import admin_bp
+    from app.routes.admin import admin_bp as admin_routes_bp
     from app.admin import views as admin_views
 
     app.register_blueprint(main.bp)
     app.register_blueprint(auth.bp)
     app.register_blueprint(raffle.bp)
-    app.register_blueprint(admin_bp)
+    app.register_blueprint(admin_routes_bp)
 
     admin_views.init_admin_views(admin_manager)
 
