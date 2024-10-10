@@ -14,7 +14,6 @@ db = SQLAlchemy()
 migrate = Migrate()
 login_manager = LoginManager()
 login_manager.login_view = 'auth.login'
-admin_manager = Admin(template_mode='bootstrap3')
 
 def create_app(config_class=Config):
     app = Flask(__name__)
@@ -23,19 +22,18 @@ def create_app(config_class=Config):
     db.init_app(app)
     migrate.init_app(app, db)
     login_manager.init_app(app)
-    admin_manager.init_app(app)
 
     from app.models import User
     from app.routes import main, auth, raffle
-    from app.routes.admin import admin_bp as custom_admin_bp
-    from app.admin import views as admin_views
+    from app.admin.views import admin_bp, MyAdminIndexView, init_admin_views
 
     app.register_blueprint(main.bp)
     app.register_blueprint(auth.bp)
     app.register_blueprint(raffle.bp)
-    app.register_blueprint(custom_admin_bp)
+    app.register_blueprint(admin_bp)
 
-    admin_views.init_admin_views(admin_manager)
+    admin_manager = Admin(app, index_view=MyAdminIndexView(), template_mode='bootstrap3')
+    init_admin_views(admin_manager)
 
     @login_manager.user_loader
     def load_user(user_id):

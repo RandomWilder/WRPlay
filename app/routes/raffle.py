@@ -38,16 +38,18 @@ def my_tickets():
     user_balance = UserService.get_user_balance(current_user.id)
     return render_template('raffle/my_tickets.html', tickets=tickets, balance=user_balance)
 
-@bp.route('/add-funds', methods=['POST'])
+@bp.route('/add-funds', methods=['GET', 'POST'])
 @login_required
 def add_funds():
-    amount = float(request.form.get('amount', 0))
-    if amount <= 0:
-        flash('Invalid amount', 'error')
-    else:
-        success = UserService.update_user_balance(current_user.id, amount)
-        if success:
-            flash(f'Successfully added ${amount:.2f} to your balance', 'success')
+    if request.method == 'POST':
+        amount = float(request.form.get('amount', 0))
+        if amount <= 0:
+            flash('Invalid amount', 'error')
         else:
-            flash('Failed to add funds', 'error')
-    return redirect(url_for('raffle.my_tickets'))
+            success = UserService.update_user_balance(current_user.id, amount)
+            if success:
+                flash(f'Successfully added ${amount:.2f} to your balance', 'success')
+            else:
+                flash('Failed to add funds', 'error')
+        return redirect(url_for('raffle.my_tickets'))
+    return render_template('raffle/add_funds.html')

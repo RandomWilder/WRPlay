@@ -14,6 +14,9 @@
         .content {
             padding: 3rem 1.5rem;
         }
+        .balance-display {
+            min-width: 120px;
+        }
     </style>
     {% block extra_css %}{% endblock %}
 </head>
@@ -39,6 +42,13 @@
                     {% if current_user.is_authenticated %}
                     <li class="nav-item">
                         <span class="nav-link">Welcome, {{ current_user.username }}</span>
+                    </li>
+                    <li class="nav-item">
+                        {% if current_user.balance > 0 %}
+                        <span class="nav-link balance-display">Balance: ${{ '%.2f'|format(current_user.balance) }}</span>
+                        {% else %}
+                        <a href="{{ url_for('raffle.add_funds') }}" class="btn btn-outline-light btn-sm balance-display">Add Balance</a>
+                        {% endif %}
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{{ url_for('auth.logout') }}">Logout</a>

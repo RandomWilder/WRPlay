@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1 class="mb-4">Add Funds</h1>
+<form method="POST" action="{{ url_for('raffle.add_funds') }}">
+    <div class="mb-3">
+        <label for="amount" class="form-label">Amount to Add ($)</label>
+        <input type="number" class="form-control" id="amount" name="amount" min="0.01" step="0.01" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Add Funds</button>
+</form>
+{% endblock %}

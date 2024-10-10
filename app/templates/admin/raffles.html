@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}Admin - Raffles{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">Admin - Raffles</h1>
+
+<a href="{{ url_for('custom_admin.create_raffle') }}" class="btn btn-primary mb-3">Create New Raffle</a>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Ticket Price</th>
+            <th>Total Tickets</th>
+            <th>Sold Tickets</th>
+            <th>Draw Date</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for raffle in raffles %}
+        <tr>
+            <td>{{ raffle.id }}</td>
+            <td>{{ raffle.name }}</td>
+            <td>${{ "%.2f"|format(raffle.ticket_price) }}</td>
+            <td>{{ raffle.total_tickets }}</td>
+            <td>{{ raffle.tickets|selectattr('user_id', 'defined')|list|length }}/{{ raffle.total_tickets }}</td>
+            <td>{{ raffle.draw_date.strftime('%Y-%m-%d %H:%M') }}</td>
+            <td>{% if raffle.is_active %}Active{% else %}Closed{% endif %}</td>
+            <td>
+                {% if raffle.is_active %}
+                <form action="{{ url_for('custom_admin.close_raffle', raffle_id=raffle.id) }}" method="POST" style="display:inline;">
+                    <button type="submit" class="btn btn-warning btn-sm" onclick="return confirm('Are you sure you want to close this raffle?');">Close Raffle</button>
+                </form>
+                {% else %}
+                <span class="badge bg-secondary">Closed</span>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

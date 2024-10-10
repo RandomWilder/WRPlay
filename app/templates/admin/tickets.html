@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}Admin - Tickets{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">Admin - Tickets</h1>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Raffle</th>
+            <th>User</th>
+            <th>Ticket Number</th>
+            <th>Purchase Date</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for ticket in tickets %}
+        <tr>
+            <td>{{ ticket.id }}</td>
+            <td>{{ ticket.raffle.name }}</td>
+            <td>{% if ticket.user %}{{ ticket.user.username }}{% else %}Not Purchased{% endif %}</td>
+            <td>{{ ticket.ticket_number }}</td>
+            <td>{% if ticket.purchase_date %}{{ ticket.purchase_date.strftime('%Y-%m-%d %H:%M') }}{% else %}N/A{% endif %}</td>
+            <td>
+                {% if ticket.is_winner %}
+                <span class="badge bg-success">Winner</span>
+                {% elif ticket.user %}
+                <span class="badge bg-primary">Purchased</span>
+                {% else %}
+                <span class="badge bg-secondary">Available</span>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
