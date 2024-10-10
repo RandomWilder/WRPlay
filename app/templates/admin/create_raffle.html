@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %}Create Raffle{% endblock %}
+
+{% block content %}
+<h1>Create New Raffle</h1>
+<form method="POST">
+    <div class="form-group">
+        <label for="name">Raffle Name</label>
+        <input type="text" class="form-control" id="name" name="name" required>
+    </div>
+    <div class="form-group">
+        <label for="total_tickets">Total Tickets</label>
+        <input type="number" class="form-control" id="total_tickets" name="total_tickets" required>
+    </div>
+    <div class="form-group">
+        <label for="winning_tickets">Winning Tickets</label>
+        <input type="number" class="form-control" id="winning_tickets" name="winning_tickets" required>
+    </div>
+    <div class="form-group">
+        <label for="ticket_price">Ticket Price</label>
+        <input type="number" step="0.01" class="form-control" id="ticket_price" name="ticket_price" required>
+    </div>
+    <div class="form-group">
+        <label for="draw_time">Draw Time</label>
+        <input type="datetime-local" class="form-control" id="draw_time" name="draw_time" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Create Raffle</button>
+</form>
+{% endblock %}

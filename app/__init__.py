@@ -1,3 +1,6 @@
+import logging
+logging.basicConfig(level=logging.DEBUG)
+
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
@@ -6,7 +9,7 @@ from config import Config
 
 db = SQLAlchemy()
 login_manager = LoginManager()
-admin_manager = Admin(template_mode='bootstrap3')  # Renamed from 'admin' to 'admin_manager'
+admin_manager = Admin(template_mode='bootstrap3')
 
 def create_app(config_class=Config):
     app = Flask(__name__)
@@ -14,18 +17,19 @@ def create_app(config_class=Config):
 
     db.init_app(app)
     login_manager.init_app(app)
-    admin_manager.init_app(app)  # Use the new name here
+    admin_manager.init_app(app)
 
     from app.models import User
-    from app.routes import main, auth, raffle, admin as admin_routes
+    from app.routes import main, auth, raffle
+    from app.routes.admin import admin_bp
     from app.admin import views as admin_views
 
     app.register_blueprint(main.bp)
     app.register_blueprint(auth.bp)
     app.register_blueprint(raffle.bp)
-    app.register_blueprint(admin_routes.bp)
+    app.register_blueprint(admin_bp)
 
-    admin_views.init_admin_views(admin_manager)  # Pass the renamed admin_manager here
+    admin_views.init_admin_views(admin_manager)
 
     @login_manager.user_loader
     def load_user(user_id):
